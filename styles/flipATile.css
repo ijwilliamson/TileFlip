@@ -82,3 +82,7 @@ piece{
 .valid{
     background-color:blue;
 }
+
+.hidden{
+    display:none;
+}

@@ -30,9 +30,10 @@ window.addEventListener('resize',()=> handleWindowResize());
 // Functions
 
 initalSetup = ()=>{
+    handleWindowResize();
     buildBoard();
     startingPieces();
-    handleWindowResize();
+    setPlay(currentPlayer);
     checkAllFreeSpaces();
 }
 
@@ -58,6 +59,28 @@ startingPieces = () =>{
     placePiece(document.getElementById('36'),'white');
     placePiece(document.getElementById('35'),'black');
 }
+
+switchPlayers = ()=>{
+    currentPlayer = (currentPlayer==='black') ? 'white' : 'black';
+    setPlay();
+    checkAllFreeSpaces();
+
+}
+
+setPlay = () =>{
+    let id = (currentPlayer==='black') ? 'bp' : 'wp';
+    let altId = (currentPlayer==='black') ? 'wp' : 'bp'
+    let masterPiece = document.getElementById(id);
+    masterPiece.setAttribute('draggable', true);
+    masterPiece.classList.remove('hidden')
+    let AltPiece = document.getElementById(altId);
+    AltPiece.setAttribute('draggable', false);
+    AltPiece.classList.add('hidden');
+    
+}
+
+
+
 
 handleWindowResize = ()=>{
     let width = window.innerWidth;
@@ -136,6 +159,7 @@ args.preventDefault();
     color = document.getElementById(data).className;
 
     placePiece(target, color);
+    switchPlayers();
 }
 
 placePiece = (target, color)=>{
@@ -171,7 +195,9 @@ checkAllFreeSpaces = ()=>{
         } else {
             if (checkAllLines(currentPlayer,i)){
                 document.getElementById(i.toString()).classList.add('valid');
-            } 
+            } else {
+                document.getElementById(i.toString()).classList.remove('valid');
+            }
             //check for a valid line
             //if a valid line mark with a class
         }
@@ -199,7 +225,7 @@ checkline = (color, direction, space) => {
     // 5 south west, 6 west, 7 north west
 
     //space adjustments to get the next item in the line
-    let dirAdjust = [-8,-7,1,9,8,-7,-1,-9]
+    let dirAdjust = [-8,-7,1,9,8,7,-1,-9]
     let foundOpp = false;
     let foundOwn = false;
     let opponent = (color==='black') ? 'white' : 'black';
@@ -227,22 +253,41 @@ checkline = (color, direction, space) => {
 isLimit = (space, direction) => {
 //return true if the end of the board has been reached in the direction of travel
 
-    //Check North
-    if (direction === 0 || direction === 1 || direction || 9){
-        if (space<=7 ) return true
-    }
-    //Check East
-    if (direction === 2 || direction === 3 || direction || 1){
-        if ((space-7)%8===0) return true
-    }
-     //Check South
-     if (direction === 4 || direction === 5 || direction || 3){
-        if (space>=56) return true
-    }
-    //Check West
-    if (direction === 6 || direction === 7 || direction || 5){
-        if (space%8===0) return true
-    }
+    switch(direction)
+    {
+        case 0:
+            if (space<=7 ) return true
+            break;
+        case 1:
+            if (space<=7 ) return true
+            if ((space-7)%8===0) return true
+            break;
+        case 2:
+            if ((space-7)%8===0) return true
+            break;
+        case 3:
+            if ((space-7)%8===0) return true
+            if (space>=56) return true
+            break;
+        case 4:
+            if (space>=56) return true
+            break;
+        case 5:
+            if (space>=56) return true
+            if (space%8===0) return true
+            break;
+        case 6:
+            if (space%8===0) return true
+            break;
+        case 7:
+            if (space%8===0) return true
+            if (space<=7 ) return true
+            break;
 
-    return false;7
+    }
+       
+        
+ 
+
+    return false;
 }
