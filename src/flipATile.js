@@ -20,6 +20,7 @@ const gameBoard = document.getElementsByTagName('gameBoard')[0]
 let historyCounter = 0;
 let boardTracker = [].fill(null);
 let currentPlayer = 'white'
+let playableSquares = 0;
 
 // Events
 document.addEventListener('DOMContentLoaded',()=> initalSetup())
@@ -64,6 +65,10 @@ switchPlayers = ()=>{
     currentPlayer = (currentPlayer==='black') ? 'white' : 'black';
     setPlay();
     checkAllFreeSpaces();
+    if(playableSquares ===0){
+        alert('no spaces switching to other player');
+        switchPlayers();
+    }
 
 }
 
@@ -159,6 +164,7 @@ args.preventDefault();
     color = document.getElementById(data).className;
 
     placePiece(target, color);
+    flipLines(color, parseInt(target.id));
     switchPlayers();
 }
 
@@ -173,7 +179,7 @@ placePiece = (target, color)=>{
     //
 }
 
-piece = (color)=>{
+ piece = (color)=>{
     newPiece = document.createElement('piece');
     classColor = color;
     newPiece.classList.add(classColor, 'full');
@@ -189,6 +195,7 @@ UpdateBoardData = (color, target)=>{
 }
 
 checkAllFreeSpaces = ()=>{
+    playableSquares = 0;
     for(let i = 0; i<64; i++){
         if (boardTracker[i].color){
             continue;
@@ -208,32 +215,37 @@ checkAllLines = (color,space)=> {
     for (let i = 0; i<8; i++){
         if (checkline(color,i,space)) {
             console.log(`got one at ${space}`);
+            playableSquares+=1;
             return true;
-            
         }
     }
     
     return false;
 }
 
+opponent = ()=>{
+    return (currentPlayer==='black') ? 'white' : 'black'
+}
+
+//space adjustments to get the next item in the line
+const dirAdjust = [-8,-7,1,9,8,7,-1,-9]
+
 checkline = (color, direction, space) => {
     if (isLimit(space,direction)) return false;
     //returns true if a pieces would be taken
+
     //color: black or white, color of the piece placed or to be placed
     //directions
     // 0 north, 1 north east, 2 east, 3 south east, 4 south
     // 5 south west, 6 west, 7 north west
 
-    //space adjustments to get the next item in the line
-    let dirAdjust = [-8,-7,1,9,8,7,-1,-9]
-    let foundOpp = false;
-    let foundOwn = false;
-    let opponent = (color==='black') ? 'white' : 'black';
+  //  let opponent = (color==='black') ? 'white' : 'black';
     let testingSpace = space;
     
     testingSpace = testingSpace + dirAdjust[direction];
     
     console.log(`direction: ${direction}     space:${space}    testing:${testingSpace}`);
+   
     if (boardTracker[testingSpace].color === null) return false;
         //blank square
     if (boardTracker[testingSpace].color === color) return false;
@@ -248,6 +260,34 @@ checkline = (color, direction, space) => {
     }
         
     return false;
+}
+
+flipLines = (color, space) => {
+    for (let direction = 0; direction<8; direction++){
+        if (checkline(color,direction,space)) {
+            //direction works
+            //direction has a valid flip
+
+            let toFlip = space;
+            toFlip = toFlip + dirAdjust[direction]; 
+            do{
+                switchPiece = document.getElementById(toFlip.toString()).firstChild;
+                switchPiece.classList.remove(opponent());
+                switchPiece.classList.add(color);
+                boardTracker[toFlip].color = color;
+                toFlip += dirAdjust[direction];
+            }while(boardTracker[toFlip].color!==color)
+        }
+    }
+    
+
+
+
+
+    //start with square
+    //examin a line at a time
+        //flip a line if valid
+    //repeat
 }
 
 isLimit = (space, direction) => {
@@ -283,11 +323,6 @@ isLimit = (space, direction) => {
             if (space%8===0) return true
             if (space<=7 ) return true
             break;
-
     }
-       
-        
- 
-
     return false;
 }
