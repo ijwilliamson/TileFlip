@@ -1,0 +1,84 @@
+:root{
+--black: #000000;
+--green: #047325;
+--BoardMargin: 20px;
+--BoardPadding: 5px;
+--SquareWidth: 0px;
+--SquareBorder: 4px;
+}
+/* --BoardWidth: calc(100% - ( (var(--BoardMargin) + var(--BoardPadding)) * 2) );
+--BoardHeight: calc(100% - ( (var(--BoardMargin) + var(--BoardPadding)) * 2)); */
+
+body {
+    width:100vw;
+    height:100vh;
+    background-color: var(--black);
+    margin:0px;
+    padding:0px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+}
+
+gameBoard{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin:var(--BoardMargin);
+    background-color: var(--green);
+    position: absolute;
+    padding:var(--BoardPadding);
+    border-radius: 0px;
+    
+}
+square{
+    display:block;
+    width: calc(var(--SquareWidth) - (var(--SquareBorder) * 2));
+    height: calc(var(--SquareWidth) - (var(--SquareBorder) * 2));
+    border: var(--SquareBorder) solid yellow;
+    box-shadow: inset 4px -4px 6px black;
+}
+playArea{
+    height:150px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: bisque;
+    width:100%;
+    position: relative ;
+    top: calc(100vh - 150px);
+    
+}
+
+piece{
+    width: calc( (var(--SquareWidth) - (var(--SquareBorder) * 2)) * .8);
+    height: calc( (var(--SquareWidth) - (var(--SquareBorder) * 2)) * .8);
+   
+    display:block;
+    
+    border-radius: 50%;
+    filter: drop-shadow(5px 5px 0px black);
+    margin:4px;
+}
+
+.white{
+    background-color: white;
+    border: 1px solid black;
+}
+
+.black{
+    background-color: black;
+    border: 1px solid white;
+}
+
+.invalid{
+    background-color:red;
+}
+
+.valid{
+    background-color:blue;
+}
