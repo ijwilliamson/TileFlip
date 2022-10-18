@@ -13,14 +13,16 @@ class boardSpace{
 // Constants
 const root = document.querySelector(':root');
 const gameBoard = document.getElementsByTagName('gameBoard')[0]
-
-
+const playArea = document.getElementsByTagName('playArea')[0]
+const playAreas = playArea.children;
+const scores = document.getElementsByTagName('score');
 
 // Variables
 let historyCounter = 0;
 let boardTracker = [].fill(null);
 let currentPlayer = 'white'
 let playableSquares = 0;
+let totals = [2,2];
 
 // Events
 document.addEventListener('DOMContentLoaded',()=> initalSetup())
@@ -47,11 +49,8 @@ buildBoard = () =>{
         
         sqr.addEventListener('dragenter', (args)=>handleDragEnter(args));
         gameBoard.appendChild(sqr);
-        boardTracker[i] = new boardSpace(i,null,null);
-        
+        boardTracker[i] = new boardSpace(i,null,null); 
     }
-
-
 }
 
 startingPieces = () =>{
@@ -62,13 +61,28 @@ startingPieces = () =>{
 }
 
 switchPlayers = ()=>{
-    currentPlayer = (currentPlayer==='black') ? 'white' : 'black';
+    currentPlayer = opponent(currentPlayer);
     setPlay();
+    setPlayArea(currentPlayer);
     checkAllFreeSpaces();
+
     if(playableSquares ===0){
         alert('no spaces switching to other player');
         switchPlayers();
     }
+    window.getSelection()?.removeAllRanges();
+}
+
+colorToId = (color)=>{
+    return (color==='white') ?0 : 1;
+}
+
+
+setPlayArea= (color)=>{
+    playAreas[colorToId(color)].classList.remove('inactiveArea')
+    playAreas[colorToId(opponent(color))].classList.add('inactiveArea')
+    
+    
 
 }
 
@@ -84,8 +98,13 @@ setPlay = () =>{
     
 }
 
+updateScores = ()=>{
 
 
+
+    scores[0].textContent = totals[0].toString();
+    scores[1].textContent = totals[1].toString();
+}
 
 handleWindowResize = ()=>{
     let width = window.innerWidth;
@@ -196,10 +215,13 @@ UpdateBoardData = (color, target)=>{
 
 checkAllFreeSpaces = ()=>{
     playableSquares = 0;
+    totals = [0,0];
     for(let i = 0; i<64; i++){
         if (boardTracker[i].color){
+            totals[colorToId(boardTracker[i].color)] +=1;
             continue;
         } else {
+            
             if (checkAllLines(currentPlayer,i)){
                 document.getElementById(i.toString()).classList.add('valid');
             } else {
@@ -209,6 +231,7 @@ checkAllFreeSpaces = ()=>{
             //if a valid line mark with a class
         }
     }
+    updateScores();
 }
 
 checkAllLines = (color,space)=> {
@@ -279,7 +302,7 @@ flipLines = (color, space) => {
             }while(boardTracker[toFlip].color!==color)
         }
     }
-    
+    updateScores();
 
 
 

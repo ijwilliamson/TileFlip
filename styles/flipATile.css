@@ -1,13 +1,15 @@
 :root{
 --black: #000000;
 --green: #047325;
+--lines: #16621e;
 --BoardMargin: 20px;
 --BoardPadding: 5px;
 --SquareWidth: 0px;
 --SquareBorder: 4px;
 }
-/* --BoardWidth: calc(100% - ( (var(--BoardMargin) + var(--BoardPadding)) * 2) );
---BoardHeight: calc(100% - ( (var(--BoardMargin) + var(--BoardPadding)) * 2)); */
+
+::selection { background: transparent; }
+::-moz-selection { background: transparent; }
 
 body {
     width:100vw;
@@ -21,6 +23,7 @@ body {
     justify-content: space-between;
     align-items: center;
     position: absolute;
+    font-size:12px;
 }
 
 gameBoard{
@@ -32,26 +35,55 @@ gameBoard{
     position: absolute;
     padding:var(--BoardPadding);
     border-radius: 0px;
-    
 }
+
 square{
     display:block;
     width: calc(var(--SquareWidth) - (var(--SquareBorder) * 2));
     height: calc(var(--SquareWidth) - (var(--SquareBorder) * 2));
-    border: var(--SquareBorder) solid yellow;
+    border: var(--SquareBorder) solid var(--lines);
     box-shadow: inset 4px -4px 6px black;
+    transition-duration: 0s;
 }
+
 playArea{
     height:150px;
     display:flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: stretch;
     align-items: center;
-    background-color: bisque;
+    background-color: rgb(0, 0, 0);
     width:100%;
     position: relative ;
     top: calc(100vh - 150px);
     
+}
+
+whiteArea, blackArea{
+    flex-grow: 1;
+    height: calc(100% - 4px);
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 2px solid white;
+}
+whiteArea{
+    background-color: #047325;
+}
+blackArea{
+    background-color: #047325;
+}
+
+.inactiveArea{
+    opacity:50%;
+}
+
+pieceHolder {
+    display:block;
+   
+   width: calc( (var(--SquareWidth) - (var(--SquareBorder) * 2)) * .8);
+   height: calc( (var(--SquareWidth) - (var(--SquareBorder) * 2)) * .8);
+  
 }
 
 piece{
@@ -65,14 +97,30 @@ piece{
     margin:4px;
 }
 
+score{
+    display: block;
+    width: 30%;
+    font-size: 4em;
+    background-color: #ffffff55;
+    border-radius: 25%;
+    line-height: 2em;
+    text-align: center;
+    box-shadow: inset 2px -2px 6px black;
+}
+
+
+
+
 .white{
     background-color: white;
     border: 1px solid black;
+    transition-duration: 1s;
 }
 
 .black{
     background-color: black;
     border: 1px solid white;
+    transition-duration: 1s;
 }
 
 .invalid{
@@ -80,7 +128,8 @@ piece{
 }
 
 .valid{
-    background-color:blue;
+    background-color:rgb(73, 159, 11);
+    transition-duration: 1s;
 }
 
 .hidden{

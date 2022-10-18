@@ -11,13 +11,25 @@
 
     <gameBoard></gameBoard>
     <playArea>
-        <pieceHolder>
-            <piece class="white" id="wp"  ondragstart="handleDrag(event)" ondragend="handleDragEnd(event)"></piece>
-        </pieceHolder>
-        <pieceHolder>
-            <piece class="black" id="bp"  ondragstart="handleDrag(event)" ondragend="handleDragEnd(event)"></piece>
-        </pieceHolder>
-        </playArea>
+        <whiteArea>
+            <score>2</score>
+            <pieceHolder>
+                <piece class="white" id="wp"  ondragstart="handleDrag(event)" ondragend="handleDragEnd(event)"></piece>
+            </pieceHolder>
+            
+
+        </whiteArea>
+        <blackArea class="inactiveArea">
+            
+            <pieceHolder>
+                <piece class="black" id="bp"  ondragstart="handleDrag(event)" ondragend="handleDragEnd(event)"></piece>
+            </pieceHolder>
+            <score>2</score>
+        </blackArea>
+
+        
+        
+    </playArea>
 
 <!-- Nothing below this point -->
 <script src="./src/flipATile.js"></script>
